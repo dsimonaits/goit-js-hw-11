@@ -1,27 +1,26 @@
-export { fetchPixabay };
 import Notiflix from 'notiflix';
 
-class fetchPixabay {
+export class FetchPixabay {
   static URL = 'https://pixabay.com/api/';
   static #API = '30781043-697065eb175f1ee93924e4241';
-  #page = 1;
 
-  constructor(query = '') {
-    this.query = query;
-    this.#page = page;
+  constructor() {
+    this.searchQuery = '';
+    this.page = 1;
   }
 
-  async fetchImages() {
+  async fetch() {
     const params = new URLSearchParams({
-      key: fetchPixabay.#API,
-      q: this.query,
+      key: FetchPixabay.#API,
+      q: this.searchQuery,
       image_type: 'photo',
       orientation: 'horizontal',
       safesearch: 'true',
+      page: this.page,
       per_page: 40,
     });
 
-    const result = await fetch(`${fetchPixabay.URL}/${params}`);
+    const result = await fetch(`${FetchPixabay.URL}?${params}`);
 
     return result.ok
       ? result.json()
@@ -29,22 +28,18 @@ class fetchPixabay {
   }
 
   resetPage() {
-    this.#page = 0;
+    this.page = 1;
   }
 
-  get page() {
-    return this.#page;
-  }
-
-  set page(value) {
-    this.#page = value;
+  incrementPage() {
+    this.page += 1;
   }
 
   get query() {
-    return this.#query;
+    return this.searchQuery;
   }
 
   set query(value) {
-    this.#query = value;
+    this.searchQuery = value;
   }
 }
