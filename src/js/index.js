@@ -63,25 +63,24 @@ function renderMarkup(images) {
         comments,
         downloads,
       }) => {
-        return `<div class="photo-card">
-    <a class="gallery_item" href="${largeImageURL}">
-    <img class='gallery__image' src="${webformatURL}" alt="${tags}" loading="lazy" />
+        return `<a class="gallery-item" href="${largeImageURL}"><div class="photo-card">
+    <img class='gallery-image' src="${webformatURL}" alt="${tags}" loading="lazy" />
     <div class="info">
       <p class="info-item">
-        <b>Likes</b> ${likes}
+        <b>Likes:</b> ${likes}
       </p>
       <p class="info-item">
-        <b>Views</b> ${views}
+        <b>Views:</b> ${views}
       </p>
       <p class="info-item">
-        <b>Comments</b> ${comments}
+        <b>Comments:</b> ${comments}
       </p>
       <p class="info-item">
-        <b>Downloads</b> ${downloads}
+        <b>Downloads:</b> ${downloads}
       </p>
     </div>
-    </a>
-  </div>`;
+  </div>
+  </a>`;
       }
     )
     .join('');
