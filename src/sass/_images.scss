@@ -16,6 +16,15 @@ a {
   padding-top: 120px;
 }
 
+.icon-magic-wand {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      stroke-width: 0;
+      stroke: currentColor;
+      fill: #32c682;
+}
+
 @media screen and (max-width: 767px) {
   .photo-card {
     width: calc((100% - 40px) / 2);
