@@ -14,7 +14,7 @@ const fetchPixabay = new FetchPixabay();
 Notiflix.Notify.init({
   width: '280px',
   position: 'center-top',
-  distance: '25px',
+  distance: '100px',
 });
 
 refs.form.addEventListener('submit', onSearch);
