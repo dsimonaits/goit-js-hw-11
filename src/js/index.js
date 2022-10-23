@@ -11,6 +11,12 @@ const refs = {
 
 const fetchPixabay = new FetchPixabay();
 
+Notiflix.Notify.init({
+  width: '280px',
+  position: 'center-top',
+  distance: '110px',
+});
+
 refs.form.addEventListener('submit', onSearch);
 
 function onSearch(e) {
