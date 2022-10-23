@@ -98,17 +98,23 @@ const onEntry = entries => {
     if (entry.isIntersecting && fetchPixabay.query !== '') {
       fetchPixabay.fetch().then(data => {
         const totalImages = document.querySelectorAll('.photo-card').length;
-        if (totalImages >= (data.totalHits && 460)) {
-          Notiflix.Notify.info(
-            "We're sorry, but you've reached the end of search results."
-          );
+        if (
+          totalImages >= (data.totalHits && 460) ||
+          totalImages === data.totalHits
+        ) {
+          if (totalImages > 40) {
+            Notiflix.Notify.info(
+              "We're sorry, but you've reached the end of search results."
+            );
+          }
+
+          Notiflix.Loading.remove();
           observer.unobserve(refs.sentinel);
           return;
         }
-
+        Notiflix.Loading.remove();
         renderMarkup(data);
         fetchPixabay.incrementPage();
-        Notiflix.Loading.remove();
       });
     }
   });
