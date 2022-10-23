@@ -25,6 +25,7 @@ function onSearch(e) {
   fetchPixabay.query = e.currentTarget.elements.searchQuery.value;
 
   if (fetchPixabay.query === '') {
+    clearSearchContent();
     return Notiflix.Notify.info('Write something');
   }
   fetchPixabay.resetPage();
@@ -93,7 +94,7 @@ const onEntry = entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting && fetchPixabay.query !== '') {
       fetchPixabay.fetch().then(data => {
-        if (fetchPixabay.page === Math.round(data.totalHits / 40) || 2) {
+        if (fetchPixabay.page === Math.round(data.totalHits / 40)) {
           Notiflix.Notify.info(
             "We're sorry, but you've reached the end of search results."
           );

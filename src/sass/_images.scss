@@ -13,24 +13,18 @@ a {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  padding-top: 120px;
 }
 
 @media screen and (max-width: 767px) {
   .photo-card {
     width: calc((100% - 40px) / 2);
   }
-
-  .gallery {
-    padding-top: 120px;
-  }
 }
 
 @media screen and (min-width: 768px) {
   .photo-card {
     width: calc((100% - 90px) / 4);
-  }
-  .gallery {
-    padding-top: 120px;
   }
 }
 
