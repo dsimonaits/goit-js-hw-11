@@ -15,20 +15,11 @@ a {
   justify-content: space-between;
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 767px) {
   .photo-card {
     width: calc((100% - 40px) / 2);
   }
 
-  .gallery {
-    padding-top: 120px;
-  }
-}
-
-@media screen and (min-width: 480px) {
-  .photo-card {
-    width: calc((100% - 40px) / 2);
-  }
   .gallery {
     padding-top: 120px;
   }

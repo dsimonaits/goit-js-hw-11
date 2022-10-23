@@ -87,13 +87,13 @@ const onEntry = entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting && fetchPixabay.query !== '') {
       fetchPixabay.fetch().then(data => {
-        if (fetchPixabay.page === Math.round(data.totalHits / 40)) {
+        if (fetchPixabay.page === Math.round(data.totalHits / 40) || 2) {
           Notiflix.Notify.info(
             "We're sorry, but you've reached the end of search results."
           );
+          observer.unobserve(refs.sentinel);
           return;
         }
-        // console.log(Math.round(Number(data.totalhits) / 40));
         renderMarkup(data);
         fetchPixabay.incrementPage();
       });
