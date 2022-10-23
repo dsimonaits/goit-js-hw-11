@@ -13,7 +13,7 @@ const fetchPixabay = new FetchPixabay();
 
 Notiflix.Notify.init({
   width: '280px',
-  position: 'right-top',
+  position: 'center-top',
   distance: '25px',
 });
 
