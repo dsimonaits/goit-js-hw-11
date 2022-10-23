@@ -94,6 +94,7 @@ function renderMarkup(images) {
 
 const onEntry = entries => {
   entries.forEach(entry => {
+    Notiflix.Loading.standard();
     if (entry.isIntersecting && fetchPixabay.query !== '') {
       fetchPixabay.fetch().then(data => {
         const totalImages = document.querySelectorAll('.photo-card').length;
@@ -105,7 +106,6 @@ const onEntry = entries => {
           return;
         }
 
-        Notiflix.Loading.standard();
         renderMarkup(data);
         fetchPixabay.incrementPage();
         Notiflix.Loading.remove();
