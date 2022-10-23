@@ -96,10 +96,13 @@ function renderMarkup(images) {
 
 const onEntry = entries => {
   entries.forEach(entry => {
+    const totalImages = document.querySelectorAll('.photo-card').length;
+    if (totalImages < 40) {
+      return;
+    }
     if (entry.isIntersecting && fetchPixabay.query !== '') {
       Notiflix.Loading.standard();
       fetchPixabay.fetch().then(data => {
-        const totalImages = document.querySelectorAll('.photo-card').length;
         if (
           totalImages >= (data.totalHits && 460) ||
           totalImages === data.totalHits
