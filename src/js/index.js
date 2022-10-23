@@ -23,23 +23,24 @@ function onSearch(e) {
   e.preventDefault();
 
   fetchPixabay.query = e.currentTarget.elements.searchQuery.value.trim();
-
   if (fetchPixabay.query === '') {
     clearSearchContent();
     return Notiflix.Notify.info('Write something');
   }
+
   fetchPixabay.resetPage();
   clearSearchContent();
+
   fetchPixabay.fetch().then(data => {
+    Notiflix.Loading.standard();
     if (data.hits.length === 0) {
       Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
       return;
     }
-    Notiflix.Loading.standard();
-    renderMarkup(data);
     Notiflix.Loading.remove();
+    renderMarkup(data);
     Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
     observer.observe(refs.sentinel);
   });
@@ -94,8 +95,8 @@ function renderMarkup(images) {
 
 const onEntry = entries => {
   entries.forEach(entry => {
-    Notiflix.Loading.standard();
     if (entry.isIntersecting && fetchPixabay.query !== '') {
+      Notiflix.Loading.standard();
       fetchPixabay.fetch().then(data => {
         const totalImages = document.querySelectorAll('.photo-card').length;
         if (
