@@ -34,6 +34,7 @@ function onSearch(e) {
   fetchPixabay.fetch().then(data => {
     Notiflix.Loading.standard();
     if (data.hits.length === 0) {
+      Notiflix.Loading.remove();
       Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
