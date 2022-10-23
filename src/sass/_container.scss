@@ -1,20 +1,28 @@
-@media screen and (min-width: 480px) {
-    .container {
-        width: 480px;
-        margin-right: auto;
-        margin-left: auto;
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: inherit;
+  padding-left: 10px;
+  padding-right: 10px;
+}
 
-    }
+@media screen and (min-width: 480px) {
+  .container {
+    width: 480px;
+    margin-right: auto;
+    margin-left: auto;
+  }
 }
 
 @media screen and (min-width: 768px) {
-    .container {
-        width: 768px;
-    }
+  .container {
+    width: 768px;
+  }
 }
 
 @media screen and (min-width: 1200px) {
-    .container {
-        width: 1200px;
-    }
+  .container {
+    width: 1200px;
+  }
 }
