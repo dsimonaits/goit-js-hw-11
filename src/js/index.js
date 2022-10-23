@@ -22,7 +22,7 @@ refs.form.addEventListener('submit', onSearch);
 function onSearch(e) {
   e.preventDefault();
 
-  fetchPixabay.query = e.currentTarget.elements.searchQuery.value;
+  fetchPixabay.query = e.currentTarget.elements.searchQuery.value.trim();
 
   if (fetchPixabay.query === '') {
     clearSearchContent();
