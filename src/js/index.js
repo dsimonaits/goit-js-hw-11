@@ -39,6 +39,7 @@ function onSearch(e) {
     }
     renderMarkup(data);
     Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
+    observer.observe(refs.sentinel);
   });
 
   fetchPixabay.incrementPage();
@@ -94,22 +95,25 @@ const onEntry = entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting && fetchPixabay.query !== '') {
       fetchPixabay.fetch().then(data => {
-        if (fetchPixabay.page === Math.round(data.totalHits / 40)) {
-          Notiflix.Notify.info(
-            "We're sorry, but you've reached the end of search results."
-          );
+        const totalImages = document.querySelectorAll('.photo-card').length;
+        console.log(totalImages);
+        if (totalImages === data.totalHits) {
+          if (totalImages > 40) {
+            Notiflix.Notify.info(
+              "We're sorry, but you've reached the end of search results."
+            );
+          }
           observer.unobserve(refs.sentinel);
           return;
         }
         renderMarkup(data);
         fetchPixabay.incrementPage();
+        console.log(data.totalHits);
       });
     }
   });
 };
 
 const observer = new IntersectionObserver(onEntry, {
-  rootMargin: '300px',
+  rootMargin: '200px',
 });
-
-observer.observe(refs.sentinel);
