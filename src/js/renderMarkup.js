@@ -34,9 +34,4 @@ function renderMarkup(images, querySelector) {
     )
     .join('');
   querySelector.insertAdjacentHTML('beforeend', imagesMarkup);
-
-  lightbox = new SimpleLightbox('.gallery a', {
-    captionsData: 'alt',
-    captionDelay: 250,
-  }).refresh();
 }

@@ -51,6 +51,10 @@ function onSearch(e) {
       Notiflix.Loading.remove();
 
       renderMarkup(fetchData.hits, refs.gallery);
+      lightbox = new SimpleLightbox('.gallery a', {
+        captionsData: 'alt',
+        captionDelay: 250,
+      }).refresh();
       Notiflix.Notify.success(
         `Hooray! We found ${fetchData.totalHits} images.`
       );
