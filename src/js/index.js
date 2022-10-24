@@ -1,17 +1,8 @@
-import { FetchPixabay } from './fetch-pixabay';
+import { fetchPixabay } from './fetch-pixabay';
+import { renderMarkup } from './renderMarkup';
 import Notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-
-const refs = {
-  form: document.querySelector('.search-form'),
-  gallery: document.querySelector('.gallery'),
-  sentinel: document.querySelector('#sentinel'),
-};
-
-const fetchPixabay = new FetchPixabay();
-
-let lightbox;
 
 Notiflix.Notify.init({
   width: '280px',
@@ -19,81 +10,58 @@ Notiflix.Notify.init({
   distance: '100px',
 });
 
+let query = '';
+let page = 1;
+const perPage = 40;
+
+let fetchData = null;
+
+const refs = {
+  form: document.querySelector('.search-form'),
+  gallery: document.querySelector('.gallery'),
+  sentinel: document.querySelector('#sentinel'),
+};
+
 refs.form.addEventListener('submit', onSearch);
 
 function onSearch(e) {
   e.preventDefault();
-
-  fetchPixabay.query = e.currentTarget.elements.searchQuery.value.trim();
-  if (fetchPixabay.query === '') {
+  query = e.currentTarget.elements.searchQuery.value.trim();
+  if (query === '') {
     clearSearchContent();
-    return Notiflix.Notify.info('Write something');
+    NotifyEmptySearch();
+    return;
   }
 
-  fetchPixabay.resetPage();
+  resetPage();
   clearSearchContent();
 
-  fetchPixabay.fetch().then(data => {
-    Notiflix.Loading.standard();
-    if (data.hits.length === 0) {
-      Notiflix.Loading.remove();
-      Notiflix.Notify.failure(
-        'Sorry, there are no images matching your search query. Please try again.'
-      );
-      return;
-    }
-    Notiflix.Loading.remove();
-    renderMarkup(data);
-    Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
-    observer.observe(refs.sentinel);
-  });
+  fetchPixabay(query, page, perPage)
+    .then(data => {
+      fetchData = data.data;
+      NotifyLoading();
 
-  fetchPixabay.incrementPage();
-}
-
-function clearSearchContent() {
-  refs.gallery.innerHTML = '';
-}
-
-function renderMarkup(images) {
-  const imagesMarkup = images.hits
-    .map(
-      ({
-        webformatURL,
-        largeImageURL,
-        tags,
-        likes,
-        views,
-        comments,
-        downloads,
-      }) => {
-        return `<a class="gallery-item" href="${largeImageURL}"><div class="photo-card">
-    <img class='gallery-image' src="${webformatURL}" alt="${tags}" loading="lazy" />
-    <div class="info">
-      <p class="info-item">
-        <b>Likes:</b> ${likes}
-      </p>
-      <p class="info-item">
-        <b>Views:</b> ${views}
-      </p>
-      <p class="info-item">
-        <b>Comments:</b> ${comments}
-      </p>
-      <p class="info-item">
-        <b>Downloads:</b> ${downloads}
-      </p>
-    </div>
-  </div>
-  </a>`;
+      if (fetchData.length === 0) {
+        Notiflix.Loading.remove();
+        Notiflix.Notify.failure(
+          'Sorry, there are no images matching your search query. Please try again.'
+        );
+        return;
       }
-    )
-    .join('');
-  refs.gallery.insertAdjacentHTML('beforeend', imagesMarkup);
+      Notiflix.Loading.remove();
 
-  lightbox = new SimpleLightbox('.gallery a', {
-    captionsData: 'alt',
-    captionDelay: 250,
-  }).refresh();
+      renderMarkup(fetchData.hits, refs.gallery);
+      Notiflix.Notify.success(
+        `Hooray! We found ${fetchData.totalHits} images.`
+      );
+      observer.observe(refs.sentinel);
+    })
+    .catch(error => {
+      console.log(error);
+      Notiflix.Notify.failure('Something went wrong');
+    });
+
+  incrementPage();
 }
 
 const onEntry = entries => {
@@ -102,12 +70,13 @@ const onEntry = entries => {
     if (totalImages < 40) {
       return;
     }
-    if (entry.isIntersecting && fetchPixabay.query !== '') {
+    if (entry.isIntersecting && query !== '') {
       Notiflix.Loading.standard();
-      fetchPixabay.fetch().then(data => {
+      fetchPixabay(query, page, perPage).then(data => {
+        fetchData = data.data;
         if (
-          totalImages >= (data.totalHits && 460) ||
-          totalImages === data.totalHits
+          totalImages >= (fetchData.totalHits && 460) ||
+          totalImages === fetchData.totalHits
         ) {
           if (totalImages > 40) {
             Notiflix.Notify.info(
@@ -121,12 +90,32 @@ const onEntry = entries => {
         }
         lightbox.destroy();
         Notiflix.Loading.remove();
-        renderMarkup(data);
-        fetchPixabay.incrementPage();
+        renderMarkup(fetchData.hits, refs.gallery);
+        incrementPage();
       });
     }
   });
 };
+
+function resetPage() {
+  page = 1;
+}
+
+function incrementPage() {
+  page += 1;
+}
+
+function clearSearchContent() {
+  refs.gallery.innerHTML = '';
+}
+
+function NotifyEmptySearch() {
+  Notiflix.Notify.info('Write something');
+}
+
+function NotifyLoading() {
+  Notiflix.Loading.standard();
+}
 
 const observer = new IntersectionObserver(onEntry, {
   rootMargin: '200px',
