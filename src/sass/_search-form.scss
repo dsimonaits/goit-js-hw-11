@@ -14,8 +14,17 @@
 }
 
 .search-button:hover,
-.search-button:focus,
-.search-form input:hover,
-.search-form input:focus {
-  box-shadow: 0px 1px 3px #faebd7, 0px 1px 1px #faebd7, 0px 2px 1px #faebd7;
+.search-button:focus {
+    .icon-magic-wand {
+        fill:#32c682;
+    }
+}
+
+.icon-magic-wand {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    stroke-width: 0;
+    stroke: currentColor;
+    fill: #000000;
 }
