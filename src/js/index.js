@@ -1,14 +1,8 @@
 import { fetchPixabay } from './fetch-pixabay';
 import { renderMarkup } from './renderMarkup';
-import Notiflix from 'notiflix';
+import { Notify } from './notify';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-
-Notiflix.Notify.init({
-  width: '280px',
-  position: 'center-top',
-  distance: '100px',
-});
 
 let query = '';
 let page = 1;
@@ -31,78 +25,80 @@ function onSearch(e) {
   query = e.currentTarget.elements.searchQuery.value.trim();
   if (query === '') {
     clearSearchContent();
-    NotifyEmptySearch();
+    Notify.info('Write something');
     return;
   }
 
+  fetchImage();
   resetPage();
   clearSearchContent();
-
-  fetchPixabay(query, page, perPage)
-    .then(data => {
-      fetchData = data.data;
-      NotifyLoading();
-
-      if (fetchData.length === 0) {
-        Notiflix.Loading.remove();
-        Notiflix.Notify.failure(
-          'Sorry, there are no images matching your search query. Please try again.'
-        );
-        return;
-      }
-      Notiflix.Loading.remove();
-
-      renderMarkup(fetchData.hits, refs.gallery);
-      lightbox = new SimpleLightbox('.gallery a', {
-        captionsData: 'alt',
-        captionDelay: 250,
-      }).refresh();
-      Notiflix.Notify.success(
-        `Hooray! We found ${fetchData.totalHits} images.`
-      );
-      observer.observe(refs.sentinel);
-    })
-    .catch(error => {
-      console.log(error);
-      Notiflix.Notify.failure('Something went wrong');
-    });
-
   incrementPage();
 }
 
+const fetchImage = async () => {
+  try {
+    const data = await fetchPixabay(query, page, perPage);
+    fetchData = data.data;
+    Notify.addLoading();
+    if (fetchData.hits.length === 0) {
+      Notify.removeLoading();
+      Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+      return;
+    }
+    Notify.removeLoading();
+
+    renderMarkup(fetchData.hits, refs.gallery);
+    lightbox = new SimpleLightbox('.gallery a', {
+      captionsData: 'alt',
+      captionDelay: 250,
+    }).refresh();
+    Notify.success(`Hooray! We found ${fetchData.totalHits} images.`);
+    observer.observe(refs.sentinel);
+  } catch (error) {
+    console.log(error);
+    Notify.failure('Something went wrong');
+  }
+};
+
 const onEntry = entries => {
-  entries.forEach(entry => {
+  entries.forEach(async entry => {
     const totalImages = document.querySelectorAll('.photo-card').length;
     if (totalImages < 40) {
       return;
     }
     if (entry.isIntersecting && query !== '') {
-      Notiflix.Loading.standard();
-      fetchPixabay(query, page, perPage).then(data => {
+      Notify.addLoading();
+      try {
+        const data = await fetchPixabay(query, page, perPage);
         fetchData = data.data;
         if (
           totalImages >= (fetchData.totalHits && 460) ||
           totalImages === fetchData.totalHits
         ) {
           if (totalImages > 40) {
-            Notiflix.Notify.info(
+            Notify.info(
               "We're sorry, but you've reached the end of search results."
             );
           }
 
-          Notiflix.Loading.remove();
+          Notify.addLoading();
           observer.unobserve(refs.sentinel);
           return;
         }
         lightbox.destroy();
-        Notiflix.Loading.remove();
+        Notify.removeLoading();
         renderMarkup(fetchData.hits, refs.gallery);
         lightbox = new SimpleLightbox('.gallery a', {
           captionsData: 'alt',
           captionDelay: 250,
         }).refresh();
         incrementPage();
-      });
+      } catch (error) {
+        console.log(error);
+        Notify.failure('Something went wrong');
+      }
     }
   });
 };
@@ -118,19 +114,6 @@ function incrementPage() {
 function clearSearchContent() {
   refs.gallery.innerHTML = '';
 }
-
-const Notify = {
-  info() {},
-};
-
-function NotifyEmptySearch() {
-  Notiflix.Notify.info('Write something');
-}
-
-function NotifyLoading() {
-  Notiflix.Loading.standard();
-}
-
 const observer = new IntersectionObserver(onEntry, {
   rootMargin: '200px',
 });
