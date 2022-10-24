@@ -83,7 +83,7 @@ const onEntry = entries => {
             );
           }
 
-          Notify.addLoading();
+          Notify.removeLoading();
           observer.unobserve(refs.sentinel);
           return;
         }
