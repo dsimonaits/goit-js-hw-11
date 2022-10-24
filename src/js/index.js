@@ -1,5 +1,6 @@
 import { fetchPixabay } from './fetch-pixabay';
 import { renderMarkup } from './renderMarkup';
+import { smoothScroll } from './smoothScroll';
 import { Notify } from './notify';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
@@ -56,6 +57,7 @@ const fetchImage = async () => {
     }).refresh();
     Notify.success(`Hooray! We found ${fetchData.totalHits} images.`);
     observer.observe(refs.sentinel);
+    smoothScroll(refs.gallery);
   } catch (error) {
     console.log(error);
     Notify.failure('Something went wrong');
@@ -94,6 +96,7 @@ const onEntry = entries => {
           captionsData: 'alt',
           captionDelay: 250,
         }).refresh();
+        smoothScroll(refs.gallery);
         incrementPage();
       } catch (error) {
         console.log(error);
