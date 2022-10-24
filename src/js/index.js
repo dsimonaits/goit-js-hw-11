@@ -16,6 +16,8 @@ const perPage = 40;
 
 let fetchData = null;
 
+let lightbox;
+
 const refs = {
   form: document.querySelector('.search-form'),
   gallery: document.querySelector('.gallery'),
