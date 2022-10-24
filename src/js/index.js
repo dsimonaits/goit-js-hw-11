@@ -11,6 +11,8 @@ const refs = {
 
 const fetchPixabay = new FetchPixabay();
 
+let lightbox;
+
 Notiflix.Notify.init({
   width: '280px',
   position: 'center-top',
@@ -88,10 +90,10 @@ function renderMarkup(images) {
     .join('');
   refs.gallery.insertAdjacentHTML('beforeend', imagesMarkup);
 
-  const lightbox = new SimpleLightbox('.gallery a', {
+  lightbox = new SimpleLightbox('.gallery a', {
     captionsData: 'alt',
     captionDelay: 250,
-  });
+  }).refresh();
 }
 
 const onEntry = entries => {
@@ -117,6 +119,7 @@ const onEntry = entries => {
           observer.unobserve(refs.sentinel);
           return;
         }
+        lightbox.destroy();
         Notiflix.Loading.remove();
         renderMarkup(data);
         fetchPixabay.incrementPage();
