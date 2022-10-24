@@ -97,6 +97,10 @@ const onEntry = entries => {
         lightbox.destroy();
         Notiflix.Loading.remove();
         renderMarkup(fetchData.hits, refs.gallery);
+        lightbox = new SimpleLightbox('.gallery a', {
+          captionsData: 'alt',
+          captionDelay: 250,
+        }).refresh();
         incrementPage();
       });
     }
@@ -114,6 +118,10 @@ function incrementPage() {
 function clearSearchContent() {
   refs.gallery.innerHTML = '';
 }
+
+const Notify = {
+  info() {},
+};
 
 function NotifyEmptySearch() {
   Notiflix.Notify.info('Write something');
