@@ -50,20 +50,4 @@ async function fetchPixabay(query, page, perPage) {
 //       ? result.json()
 //       : Promise.reject(Notiflix.Notify.failure('Something went wrong'));
 //   }
-
-//   resetPage() {
-//     this.page = 1;
-//   }
-
-//   incrementPage() {
-//     this.page += 1;
-//   }
-
-//   get query() {
-//     return this.searchQuery;
-//   }
-
-//   set query(value) {
-//     this.searchQuery = value;
-//   }
 // }
