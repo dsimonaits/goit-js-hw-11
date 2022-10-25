@@ -9,8 +9,6 @@ let query = '';
 let page = 1;
 const perPage = 40;
 
-let fetchData = null;
-
 let lightbox;
 
 const refs = {
@@ -39,7 +37,7 @@ function onSearch(e) {
 const fetchImage = async () => {
   try {
     const data = await fetchPixabay(query, page, perPage);
-    fetchData = data.data;
+    const fetchData = data.data;
     Notify.addLoading();
     if (fetchData.hits.length === 0) {
       Notify.removeLoading();
@@ -57,7 +55,6 @@ const fetchImage = async () => {
     }).refresh();
     Notify.success(`Hooray! We found ${fetchData.totalHits} images.`);
     observer.observe(refs.sentinel);
-    smoothScroll(refs.gallery);
   } catch (error) {
     console.log(error);
     Notify.failure('Something went wrong');
@@ -74,7 +71,7 @@ const onEntry = entries => {
       Notify.addLoading();
       try {
         const data = await fetchPixabay(query, page, perPage);
-        fetchData = data.data;
+        const fetchData = data.data;
         if (
           totalImages >= (fetchData.totalHits && 460) ||
           totalImages === fetchData.totalHits
