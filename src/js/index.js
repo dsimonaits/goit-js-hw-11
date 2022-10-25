@@ -38,7 +38,7 @@ function onSearch(e) {
 const fetchImage = async () => {
   try {
     const data = await fetchPixabay(query, page, perPage);
-    const fetchData = data.data;
+    const fetchData = await data.data;
     console.log(fetchData);
     Notify.addLoading();
     if (fetchData.hits.length === 0) {
