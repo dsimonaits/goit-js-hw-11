@@ -24,6 +24,7 @@ function onSearch(e) {
   query = e.currentTarget.elements.searchQuery.value.trim();
   if (query === '') {
     clearSearchContent();
+    console.log(error);
     Notify.info('Write something');
     return;
   }
@@ -38,6 +39,7 @@ const fetchImage = async () => {
   try {
     const data = await fetchPixabay(query, page, perPage);
     const fetchData = data.data;
+    console.log(fetchData);
     Notify.addLoading();
     if (fetchData.hits.length === 0) {
       Notify.removeLoading();
