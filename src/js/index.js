@@ -93,7 +93,6 @@ const onEntry = entries => {
           captionsData: 'alt',
           captionDelay: 250,
         }).refresh();
-        smoothScroll(refs.gallery);
         incrementPage();
       } catch (error) {
         console.log(error);
