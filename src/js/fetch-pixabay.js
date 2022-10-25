@@ -20,6 +20,7 @@ async function fetchPixabay(query, page, perPage) {
     });
     return response;
   } catch (error) {
+    console.log(error);
     Notiflix.Notify.failure('Something went wrong');
   }
 }
