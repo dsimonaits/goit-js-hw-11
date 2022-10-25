@@ -32,7 +32,9 @@ function onSearch(e) {
   resetPage();
   fetchImage();
   incrementPage();
+  refs.form.reset();
 }
+
 const fetchImage = async () => {
   try {
     const data = await fetchPixabay(query, page, perPage);
