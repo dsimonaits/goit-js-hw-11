@@ -97,7 +97,6 @@ const onEntry = entries => {
         Notify.failure('Something went wrong');
       }
     }
-    console.log(totalImages);
   });
 };
 
