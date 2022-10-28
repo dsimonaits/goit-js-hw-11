@@ -8,6 +8,7 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 let query = '';
 let page = 1;
 const perPage = 40;
+const maxPages = 500;
 
 let lightbox;
 
@@ -39,7 +40,6 @@ const fetchImage = async () => {
   try {
     const data = await fetchPixabay(query, page, perPage);
     const fetchData = data.data;
-    console.log(fetchData);
     Notify.addLoading();
     if (fetchData.hits.length === 0) {
       Notify.removeLoading();
@@ -70,24 +70,20 @@ const onEntry = entries => {
       return;
     }
     if (entry.isIntersecting && query !== '') {
-      Notify.addLoading();
       try {
-        const data = await fetchPixabay(query, page, perPage);
-        const fetchData = data.data;
-        if (
-          totalImages >= (fetchData.totalHits && 460) ||
-          totalImages === fetchData.totalHits
-        ) {
-          if (totalImages > 40) {
+        if (totalImages >= maxPages) {
+          if (totalImages > perPage) {
             Notify.info(
               "We're sorry, but you've reached the end of search results."
             );
           }
-
-          Notify.removeLoading();
           observer.unobserve(refs.sentinel);
           return;
         }
+        Notify.addLoading();
+        const data = await fetchPixabay(query, page, perPage);
+        const fetchData = data.data;
+
         lightbox.destroy();
         Notify.removeLoading();
         renderMarkup(fetchData.hits, refs.gallery);
@@ -101,6 +97,7 @@ const onEntry = entries => {
         Notify.failure('Something went wrong');
       }
     }
+    console.log(totalImages);
   });
 };
 

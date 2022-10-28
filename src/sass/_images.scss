@@ -10,6 +10,7 @@ a {
 
 .gallery {
   display: flex;
+  overflow-y: hidden;
   flex-wrap: wrap;
   justify-content: space-between;
   padding-top: 120px;
