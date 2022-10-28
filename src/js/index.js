@@ -66,7 +66,7 @@ const fetchImage = async () => {
 const onEntry = entries => {
   entries.forEach(async entry => {
     const totalImages = document.querySelectorAll('.photo-card').length;
-    if (totalImages < 40) {
+    if (totalImages < perPage) {
       return;
     }
     if (entry.isIntersecting && query !== '') {
